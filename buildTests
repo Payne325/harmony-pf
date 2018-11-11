@@ -1,0 +1,8 @@
+#!/bin/bash
+# Builds the Unit Tests for the harmony-pf source
+
+echo "Begin Full Build of harmony-pf"
+
+make
+
+echo "Building complete"
