@@ -5,7 +5,7 @@ namespace Algorithms
 	class IAlgorithm
 	{
 		public:
-
+		virtual ~IAlgorithm() {};
 		virtual Point2 StartPosition() = 0;
 		virtual Point2 EndPosition() = 0;
 

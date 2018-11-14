@@ -6,7 +6,8 @@ namespace Algorithms
 	{
 	public:
 		AStar(char** map, Point2 startPosition, Point2 endPosition);
-
+		~AStar();
+		
 		Point2 StartPosition();
 		Point2 EndPosition();
 

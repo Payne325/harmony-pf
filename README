@@ -1,1 +1,7 @@
-A small project to evaluate the use of the harmony search algorithm for pathfinding. I aim is to expand on work I previously did at university and create an application that evaluates the algorithm against the A* star algorithm. The idea for this project came after an informal discussion at the monthly games wales meetup. 
+A small project to evaluate the use of the harmony search algorithm for pathfinding in games. I aim to expand on work I previously did at university and create an application that evaluates the algorithm's performance against the A* star algorithm. The idea for this project came after an informal discussion at the monthly games wales meetup. 
+
+Though the initial study was limited in its approach, initial findings suggested that a 'good enough' path could be generated, and it was speculated that with some post-processing on the generated path, a suitable solution could be obtained.
+
+This project is written entirely in C++ and contains automated tests using the Google Test framework. 
+
+At time of writing (14/11/2018), I would not recommend making pull requests yet. The project is at an early stage of development and I will most likely ignore them.
