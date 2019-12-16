@@ -104,3 +104,149 @@ TEST(AStarSpecification, AStarReturnsPathWhenRun)
     EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
     EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
 }
+
+TEST(AStarSpecification, AStarNavigatesAroundAnObsticle)
+{
+    std::vector<Point2> obsticles = { Point2(0, 1)};
+    Map map(2, 3, obsticles);
+
+    Point2 startPosition(0, 0);
+    Point2 endPosition(0, 2);
+
+    std::vector<Point2> expectedPath = { Point2(0,0), Point2(1, 1), Point2(0, 2) };
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+}
+
+TEST(AStarSpecification, AStarNavigatesAroundTwoObsticles)
+{
+    std::vector<Point2> obsticles = { Point2(3, 3), Point2(4, 3) };
+    Map map(6, 6, obsticles);
+
+    Point2 startPosition(2, 2);
+    Point2 endPosition(4, 4);
+
+    std::vector<Point2> expectedPath = { Point2(2,2), Point2(2, 3), Point2(3, 4), Point2(4, 4) };
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+}
+
+TEST(AStarSpecification, AStarNavigatesAroundThreeObsticles)
+{
+    std::vector<Point2> obsticles = { Point2(3, 3), Point2(4, 3), Point2(2, 2) };
+    Map map(6, 6, obsticles);
+
+    Point2 startPosition(4, 4);
+    Point2 endPosition(0, 1);
+
+    std::vector<Point2> expectedPath = { Point2(4, 4), Point2(3, 4), Point2(2, 3), Point2(1, 2), Point2(0, 1) };
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+}
+
+TEST(AStarSpecification, AStarCanNotMoveWhenTrapped)
+{
+    std::vector<Point2> obsticles = { Point2(4, 5), Point2(4, 4), Point2(5, 4) };
+    Map map(6, 6, obsticles);
+
+    Point2 startPosition(5, 5);
+    Point2 endPosition(0, 1);
+
+    std::vector<Point2> expectedPath = { };
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+}
+
+TEST(AStarSpecification, AStarCanNotMoveToPointOutsideOfTheMap)
+{
+    std::vector<Point2> obsticles = { };
+    Map map(6, 6, obsticles);
+
+    Point2 startPosition(5, 5);
+    Point2 endPosition(7, 7);
+
+    std::vector<Point2> expectedPath = { };
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+}
+
+TEST(AStarSpecification, AStarCanTraverseAMaze)
+{
+    /*
+        LEGEND
+        ------
+        S = Start
+        E = End
+        0 = Traversable Node
+        X = Blocked by obsticle
+
+        MAP
+        ---
+        |0|0|0|0|0|0|
+        |X|X|X|0|X|0|
+        |E|0|0|0|X|0|
+        |X|X|X|X|X|0|
+        |S|0|0|0|0|0|
+    */
+    std::vector<Point2> obsticles = 
+    { 
+        Point2(0, 1), 
+        Point2(1, 1), 
+        Point2(2, 1), 
+        Point2(3, 1), 
+        Point2(4, 1), 
+        Point2(4, 2), 
+        Point2(4, 3), 
+        Point2(0, 3), 
+        Point2(1, 3), 
+        Point2(2, 3) };
+
+    Map map(6, 5, obsticles);
+
+    Point2 startPosition(0, 0);
+    Point2 endPosition(0, 2);
+
+    std::vector<Point2> expectedPath = 
+    {
+        Point2(0, 0),
+        Point2(1, 0),
+        Point2(2, 0), 
+        Point2(3, 0),
+        Point2(4, 0), 
+        Point2(5, 1),
+        Point2(5, 2), 
+        Point2(5, 3), 
+        Point2(4, 4), 
+        Point2(3, 3), 
+        Point2(2, 2), 
+        Point2(1, 2),
+        Point2(0, 2)
+    };
+
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+}

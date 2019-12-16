@@ -66,3 +66,60 @@ TEST(MapSpecification, MapWithObsticleInNegativeSpaceIsInvalid)
     }
 }
 
+TEST(MapSpecification, MapCanBeQueriedForNodeAtGivenPosition)
+{
+    Map map(32, 32);
+
+    int exampleX = 16;
+    int exampleY = 13;
+
+    auto exampleNode = map.GetNode(exampleX, exampleY);
+
+    ASSERT_EQ(exampleNode->position.X, exampleX);
+    ASSERT_EQ(exampleNode->position.Y, exampleY);
+}
+
+TEST(MapSpecification, MapCanBeQueriedForObsticleNodeAtGivenPosition)
+{
+    std::vector<Point2> obsticles;
+
+    obsticles.push_back(Point2(24, 5));
+
+    Map map(32, 32, obsticles);
+
+    int exampleX = 24;
+    int exampleY = 5;
+
+    auto exampleNode = map.GetNode(exampleX, exampleY);
+
+    ASSERT_EQ(exampleNode->position.X, exampleX);
+    ASSERT_EQ(exampleNode->position.Y, exampleY);
+    EXPECT_TRUE(exampleNode->isObsticle);
+}
+
+TEST(MapSpecification, MapCanBeQueriedForNodesAdjacentToAGivenPosition)
+{
+    std::vector<Point2> obsticles;
+
+    obsticles.push_back(Point2(24, 5));
+
+    Map map(32, 32, obsticles);
+
+    int exampleX = 25;
+    int exampleY = 5;
+
+    auto adjacentNodes = map.GetNodesAdjacentTo(exampleX, exampleY);
+
+    EXPECT_TRUE(adjacentNodes.size() == 8);
+
+    for (auto& node : adjacentNodes)
+    {
+        auto position = node->position;
+
+        int diffX = abs(position.X - exampleX);
+        int diffY = abs(position.Y - exampleY);
+
+        EXPECT_TRUE(diffX <= 1);
+        EXPECT_TRUE(diffY <= 1);
+    }
+}
