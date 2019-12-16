@@ -21,21 +21,23 @@ Map::Map(
     m_sizeX = sizeX;
     m_sizeY = sizeY;
 
-    m_mapSpace = std::unique_ptr<charArr[]>(new charArr[m_sizeX]);
+    m_mapSpace = std::unique_ptr<nodeArr[]>(new nodeArr[m_sizeX]);
 
     for (size_t i = 0; i < m_sizeX; ++i)
     {
-        m_mapSpace[i] = charArr(new char[m_sizeY]);
+        m_mapSpace[i] = nodeArr(new Node[m_sizeY]);
 
         for (size_t j = 0; j < m_sizeY; ++j)
         {
-            m_mapSpace[i][j] = 'E';
+            m_mapSpace[i][j] = Node();
+            m_mapSpace[i][j].position = Point2(i, j);
+            m_mapSpace[i][j].isObsticle = false;
         }
     }
 
     for (const Point2& point : obsticles)
     {
-        m_mapSpace[point.X][point.Y] = 'O';
+        m_mapSpace[point.X][point.Y].isObsticle = true;
     }
 
 }
@@ -50,7 +52,7 @@ bool Map::ContainsObsticles() const
     {
         for (int j = 0; j < m_sizeY; ++j)
         {
-            if (m_mapSpace[i][j] == 'O') 
+            if (m_mapSpace[i][j].isObsticle) 
                 return true;
         }
     }
@@ -65,5 +67,40 @@ Point2 Map::Size() const
 
 bool Map::IsObsticle(const Point2& point) const
 {
-    return m_mapSpace[point.X][point.Y] == 'O';
+    return m_mapSpace[point.X][point.Y].isObsticle;
+}
+
+Node* Map::GetNode(int x, int y) const
+{
+    return &m_mapSpace[x][y];
+}
+
+std::vector<Node*> Map::GetNodesAdjacentTo(int x, int y) const
+{
+    std::vector<Node*> adjacentNodes;
+    auto target = GetNode(x, y);
+
+    for (int i = -1; i <= 1; ++i)
+    {
+        for (int j = -1; j <= 1; ++j)
+        {
+            if (i == j && j == 0) continue;
+
+            Point2 pos(target->position.X + i, target->position.Y + j);
+            if (!isValidPosition(pos.X, pos.Y)) continue;
+
+            auto adjacentNode = GetNode(pos.X, pos.Y);
+            adjacentNodes.push_back(adjacentNode);
+        }
+    }
+
+    return adjacentNodes;
+}
+
+bool Map::isValidPosition(int x, int y) const
+{
+    if (x < 0 || y < 0) return false;
+    if (x >= m_sizeX || y >= m_sizeY) return false;
+
+    return true;
 }

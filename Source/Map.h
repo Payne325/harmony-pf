@@ -5,11 +5,11 @@
 #  define MODULE_API
 #endif
 
-#include "Point2.h"
+#include "Node.h"
 #include <vector>
 #include <memory>
 
-typedef std::unique_ptr<char[]> charArr;
+typedef std::unique_ptr<Node[]> nodeArr;
 
 MODULE_API class Map
 {
@@ -27,9 +27,15 @@ public:
 
     bool IsObsticle(const Point2& point) const;
 
+    Node* GetNode(int x, int y) const;
+
+    std::vector<Node*> GetNodesAdjacentTo(int x, int y) const;
+
 private:
     int m_sizeX;
     int m_sizeY;
 
-    std::unique_ptr<charArr[]> m_mapSpace;
+    std::unique_ptr<nodeArr[]> m_mapSpace;
+
+    bool isValidPosition(int x, int y) const;
 };
