@@ -1,18 +1,17 @@
 #include "AStar.h"
-#include "Map.h"
 #include <stdexcept>
 
 namespace Algorithms
 {
     AStar::AStar(
-        Map* map,
-        Point2 startPosition,
-        Point2 endPosition)
+        const Map& map,
+        const Point2& startPosition,
+        const Point2& endPosition) 
+        :
+        m_map(map),
+        m_startPosition(startPosition),
+        m_endPosition(endPosition)
     {
-        m_map = map;
-        m_startPosition = startPosition;
-        m_endPosition = endPosition;
-
         if (startPosition.X < 0 ||
             startPosition.Y < 0)
         {
@@ -30,7 +29,6 @@ namespace Algorithms
 
     AStar::~AStar()
     {
-        delete m_map;
     }
 
     Point2 AStar::StartPosition()
@@ -45,6 +43,6 @@ namespace Algorithms
 
     bool AStar::MapContainsObsticles()
     {
-        return m_map->ContainsObsticles();
+        return m_map.ContainsObsticles();
     }
 }

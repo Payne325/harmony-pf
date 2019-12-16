@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 #include "Map.h"
 #include <stdexcept>
 #include <cstring>

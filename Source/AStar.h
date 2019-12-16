@@ -6,15 +6,14 @@
 #endif
 
 #include "IAlgorithm.h"
-
-class Map;
+#include "Map.h"
 
 namespace Algorithms
 {
     MODULE_API class AStar : public IAlgorithm
     {
     public:
-        AStar(Map* map, Point2 startPosition, Point2 endPosition);
+        AStar(const Map& map, const Point2& startPosition, const Point2& endPosition);
         ~AStar();
 
         Point2 StartPosition();
@@ -24,7 +23,7 @@ namespace Algorithms
 
     private:
 
-        Map* m_map;
+        const Map& m_map;
         Point2 m_startPosition;
         Point2 m_endPosition;
     };

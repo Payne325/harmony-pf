@@ -7,6 +7,9 @@
 
 #include "Point2.h"
 #include <vector>
+#include <memory>
+
+typedef std::unique_ptr<char[]> charArr;
 
 MODULE_API class Map
 {
@@ -18,15 +21,15 @@ public:
 
     ~Map();
 
-    bool ContainsObsticles();
+    bool ContainsObsticles() const;
 
-    Point2 Size();
+    Point2 Size() const;
 
-    bool IsObsticle(const Point2& point);
+    bool IsObsticle(const Point2& point) const;
 
 private:
     int m_sizeX;
     int m_sizeY;
 
-    char** m_mapSpace;
+    std::unique_ptr<charArr[]> m_mapSpace;
 };
