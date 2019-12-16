@@ -70,15 +70,15 @@ bool Map::IsObsticle(const Point2& point) const
     return m_mapSpace[point.X][point.Y].isObsticle;
 }
 
-Node* Map::GetNode(int x, int y) const
+Node* Map::GetNode(const Point2& point) const
 {
-    return &m_mapSpace[x][y];
+    return &m_mapSpace[point.X][point.Y];
 }
 
-std::vector<Node*> Map::GetNodesAdjacentTo(int x, int y) const
+std::vector<Node*> Map::GetNodesAdjacentTo(const Point2& point) const
 {
     std::vector<Node*> adjacentNodes;
-    auto target = GetNode(x, y);
+    auto target = GetNode(point);
 
     for (int i = -1; i <= 1; ++i)
     {
@@ -87,9 +87,9 @@ std::vector<Node*> Map::GetNodesAdjacentTo(int x, int y) const
             if (i == j && j == 0) continue;
 
             Point2 pos(target->position.X + i, target->position.Y + j);
-            if (!isValidPosition(pos.X, pos.Y)) continue;
+            if (!isValidPosition(pos)) continue;
 
-            auto adjacentNode = GetNode(pos.X, pos.Y);
+            auto adjacentNode = GetNode(pos);
             adjacentNodes.push_back(adjacentNode);
         }
     }
@@ -97,10 +97,10 @@ std::vector<Node*> Map::GetNodesAdjacentTo(int x, int y) const
     return adjacentNodes;
 }
 
-bool Map::isValidPosition(int x, int y) const
+bool Map::isValidPosition(const Point2& p) const
 {
-    if (x < 0 || y < 0) return false;
-    if (x >= m_sizeX || y >= m_sizeY) return false;
+    if (p.X < 0 || p.Y < 0) return false;
+    if (p.X >= m_sizeX || p.Y >= m_sizeY) return false;
 
     return true;
 }

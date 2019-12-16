@@ -26,16 +26,13 @@ public:
     Point2 Size() const;
 
     bool IsObsticle(const Point2& point) const;
-
-    Node* GetNode(int x, int y) const;
-
-    std::vector<Node*> GetNodesAdjacentTo(int x, int y) const;
+    Node* GetNode(const Point2& point) const;
+    std::vector<Node*> GetNodesAdjacentTo(const Point2& point) const;
 
 private:
     int m_sizeX;
     int m_sizeY;
-
     std::unique_ptr<nodeArr[]> m_mapSpace;
 
-    bool isValidPosition(int x, int y) const;
+    bool isValidPosition(const Point2& p) const;
 };

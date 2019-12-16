@@ -70,45 +70,39 @@ TEST(MapSpecification, MapCanBeQueriedForNodeAtGivenPosition)
 {
     Map map(32, 32);
 
-    int exampleX = 16;
-    int exampleY = 13;
+    Point2 examplePoint(16, 13);
 
-    auto exampleNode = map.GetNode(exampleX, exampleY);
+    auto exampleNode = map.GetNode(examplePoint);
 
-    ASSERT_EQ(exampleNode->position.X, exampleX);
-    ASSERT_EQ(exampleNode->position.Y, exampleY);
+    ASSERT_EQ(exampleNode->position, examplePoint);
 }
 
 TEST(MapSpecification, MapCanBeQueriedForObsticleNodeAtGivenPosition)
 {
     std::vector<Point2> obsticles;
-
     obsticles.push_back(Point2(24, 5));
 
     Map map(32, 32, obsticles);
 
-    int exampleX = 24;
-    int exampleY = 5;
+    Point2 examplePoint(24, 5);
 
-    auto exampleNode = map.GetNode(exampleX, exampleY);
+    auto exampleNode = map.GetNode(examplePoint);
 
-    ASSERT_EQ(exampleNode->position.X, exampleX);
-    ASSERT_EQ(exampleNode->position.Y, exampleY);
+    ASSERT_EQ(exampleNode->position, examplePoint);
     EXPECT_TRUE(exampleNode->isObsticle);
 }
 
 TEST(MapSpecification, MapCanBeQueriedForNodesAdjacentToAGivenPosition)
 {
     std::vector<Point2> obsticles;
-
     obsticles.push_back(Point2(24, 5));
 
     Map map(32, 32, obsticles);
 
-    int exampleX = 25;
-    int exampleY = 5;
+    Point2 examplePoint(25, 5);
 
-    auto adjacentNodes = map.GetNodesAdjacentTo(exampleX, exampleY);
+
+    auto adjacentNodes = map.GetNodesAdjacentTo(examplePoint);
 
     EXPECT_TRUE(adjacentNodes.size() == 8);
 
@@ -116,8 +110,8 @@ TEST(MapSpecification, MapCanBeQueriedForNodesAdjacentToAGivenPosition)
     {
         auto position = node->position;
 
-        int diffX = abs(position.X - exampleX);
-        int diffY = abs(position.Y - exampleY);
+        int diffX = abs(position.X - examplePoint.X);
+        int diffY = abs(position.Y - examplePoint.Y);
 
         EXPECT_TRUE(diffX <= 1);
         EXPECT_TRUE(diffY <= 1);

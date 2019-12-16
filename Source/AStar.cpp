@@ -51,7 +51,7 @@ namespace Algorithms
         std::vector<Node*> openList;
         std::vector<Node*> closedList;
 
-        Node* startNode = m_map.GetNode(m_startPosition.X, m_startPosition.Y);
+        Node* startNode = m_map.GetNode(m_startPosition);
 
         openList.push_back(startNode);
 
@@ -77,7 +77,7 @@ namespace Algorithms
                 closedList.push_back(currentNode);
                 openList.erase(currentNodeIt);
 
-                auto adjacentNodes = m_map.GetNodesAdjacentTo(currentNode->position.X, currentNode->position.Y);
+                auto adjacentNodes = m_map.GetNodesAdjacentTo(currentNode->position);
 
                 for (auto& adjacentNode : adjacentNodes)
                 {
