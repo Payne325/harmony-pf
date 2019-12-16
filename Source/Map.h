@@ -22,10 +22,10 @@ public:
     ~Map();
 
     bool ContainsObsticles() const;
-
     Point2 Size() const;
-
     bool IsObsticle(const Point2& point) const;
+    bool PointLiesWithinMap(const Point2& p) const;
+
     Node* GetNode(const Point2& point) const;
     std::vector<Node*> GetNodesAdjacentTo(const Point2& point) const;
 
@@ -34,5 +34,5 @@ private:
     int m_sizeY;
     std::unique_ptr<nodeArr[]> m_mapSpace;
 
-    bool isValidPosition(const Point2& p) const;
+    
 };

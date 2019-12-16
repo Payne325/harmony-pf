@@ -87,7 +87,7 @@ std::vector<Node*> Map::GetNodesAdjacentTo(const Point2& point) const
             if (i == j && j == 0) continue;
 
             Point2 pos(target->position.X + i, target->position.Y + j);
-            if (!isValidPosition(pos)) continue;
+            if (!PointLiesWithinMap(pos)) continue;
 
             auto adjacentNode = GetNode(pos);
             adjacentNodes.push_back(adjacentNode);
@@ -97,7 +97,7 @@ std::vector<Node*> Map::GetNodesAdjacentTo(const Point2& point) const
     return adjacentNodes;
 }
 
-bool Map::isValidPosition(const Point2& p) const
+bool Map::PointLiesWithinMap(const Point2& p) const
 {
     if (p.X < 0 || p.Y < 0) return false;
     if (p.X >= m_sizeX || p.Y >= m_sizeY) return false;

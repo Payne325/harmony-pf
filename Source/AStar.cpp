@@ -15,15 +15,13 @@ namespace Algorithms
         m_startPosition(startPosition),
         m_endPosition(endPosition)
     {
-        if (startPosition.X < 0 ||
-            startPosition.Y < 0)
+        if (!m_map.PointLiesWithinMap(startPosition))
         {
             throw std::invalid_argument(
                 "StartPosition out of bounds! Algorithm Construction Failed!");
         }
 
-        if (endPosition.X < 0 ||
-            endPosition.Y < 0)
+        if (!m_map.PointLiesWithinMap(endPosition))
         {
             throw std::invalid_argument(
                 "EndPosition out of bounds! Algorithm Construction Failed!");
@@ -84,13 +82,13 @@ namespace Algorithms
                     auto notInOpenList = std::find_if(openList.begin(), openList.end(),
                         [&adjacentNode](const Node* node)
                         {
-                            return node->position == adjacentNode->position;
+                            return node == adjacentNode;
                         }) == openList.end();
 
                     auto notInClosedList = std::find_if(closedList.begin(), closedList.end(),
                         [&adjacentNode](const Node* node)
                         {
-                            return node->position == adjacentNode->position;
+                            return node == adjacentNode;
                         }) == closedList.end();
 
                     if (notInOpenList && notInClosedList)

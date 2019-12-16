@@ -175,19 +175,21 @@ TEST(AStarSpecification, AStarCanNotMoveWhenTrapped)
 
 TEST(AStarSpecification, AStarCanNotMoveToPointOutsideOfTheMap)
 {
-    std::vector<Point2> obsticles = { };
-    Map map(6, 6, obsticles);
+    Map map(6, 6);
 
     Point2 startPosition(5, 5);
     Point2 endPosition(7, 7);
 
-    std::vector<Point2> expectedPath = { };
-    AStar pathFinder(map, startPosition, endPosition);
-
-    auto metrics = pathFinder.Run();
-
-    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
-    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
+    try
+    {
+        AStar pathFinder(map, startPosition, endPosition);
+        EXPECT_TRUE(false);
+    }
+    catch (const std::invalid_argument & e)
+    {
+        EXPECT_TRUE(strcmp(e.what(),
+            "EndPosition out of bounds! Algorithm Construction Failed!") == 0);
+    }
 }
 
 TEST(AStarSpecification, AStarCanTraverseAMaze)
