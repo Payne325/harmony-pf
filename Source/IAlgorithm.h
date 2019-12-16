@@ -6,8 +6,8 @@
 #  define MODULE_API
 #endif
 
-
 #include "Point2.h"
+#include "Metrics.h"
 
 namespace Algorithms
 {
@@ -17,7 +17,7 @@ namespace Algorithms
         virtual ~IAlgorithm() {};
         virtual Point2 StartPosition() = 0;
         virtual Point2 EndPosition() = 0;
-
+        virtual Metrics Run() = 0;
         virtual bool MapContainsObsticles() = 0;
     };
 }

@@ -26,7 +26,7 @@ TEST(AStarSpecification, AStarIsConstructedWithNotEmptyMap)
     obsticles.push_back(Point2(2, 2));
 
     Map map(32, 32, obsticles);
-    
+
     Point2 startPosition(0, 0);
     Point2 endPosition(31, 31);
 
@@ -87,4 +87,20 @@ TEST(AStarSpecification, AStarIsNotConstructedWithNegativeEndPosition)
         EXPECT_TRUE(strcmp(e.what(),
             "EndPosition out of bounds! Algorithm Construction Failed!") == 0);
     }
+}
+
+TEST(AStarSpecification, AStarReturnsPathWhenRun)
+{
+    Map map(6, 6);
+
+    Point2 startPosition(2, 2);
+    Point2 endPosition(4, 4);
+
+    std::vector<Point2> expectedPath = { Point2(2,2), Point2(3, 3), Point2(4, 4) };
+    AStar pathFinder(map, startPosition, endPosition);
+
+    auto metrics = pathFinder.Run();
+
+    EXPECT_TRUE(expectedPath.size() == metrics.calculated_route.size());
+    EXPECT_TRUE(std::equal(expectedPath.begin(), expectedPath.end(), metrics.calculated_route.begin()));
 }

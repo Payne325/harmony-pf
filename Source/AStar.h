@@ -6,7 +6,8 @@
 #endif
 
 #include "IAlgorithm.h"
-#include "Map.h"
+
+class Map;
 
 namespace Algorithms
 {
@@ -18,7 +19,7 @@ namespace Algorithms
 
         Point2 StartPosition();
         Point2 EndPosition();
-
+        Metrics Run();
         bool MapContainsObsticles();
 
     private:

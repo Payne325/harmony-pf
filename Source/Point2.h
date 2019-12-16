@@ -21,7 +21,7 @@ public:
         Y = y;
     }
 
-    bool operator== (const Point2& rhs)
+    bool operator== (const Point2& rhs) const
     {
         return
             this->X == rhs.X &&
