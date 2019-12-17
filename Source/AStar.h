@@ -17,13 +17,12 @@ namespace Algorithms
         AStar(const Map& map, const Point2& startPosition, const Point2& endPosition);
         ~AStar();
 
-        Point2 StartPosition();
-        Point2 EndPosition();
-        Metrics Run();
-        bool MapContainsObsticles();
+        Point2 StartPosition() override;
+        Point2 EndPosition() override;
+        Metrics Run() override;
+        bool MapContainsObsticles() override;
 
     private:
-
         const Map& m_map;
         Point2 m_startPosition;
         Point2 m_endPosition;
