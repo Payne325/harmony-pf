@@ -45,7 +45,7 @@ namespace Algorithms
         int m_harmonyMemorySize;
 
         Harmony getRandomHarmony();
-        Harmony getNextHarmony();
+        inline Harmony getNextHarmony();
         int quality(const Harmony& harmony);
     };
 }

@@ -72,7 +72,7 @@ bool Map::IsObsticle(const Point2& point) const
 
 Node* Map::GetNode(const Point2& point) const
 {
-    return &m_mapSpace[point.X][point.Y];
+    return &(m_mapSpace[point.X][point.Y]);
 }
 
 std::vector<Node*> Map::GetNodesAdjacentTo(const Point2& point) const
