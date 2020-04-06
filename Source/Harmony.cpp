@@ -1,5 +1,6 @@
 #include "Harmony.h"
 #include "Map.h"
+#include <limits>
 #include <stdexcept>
 #include <random>
 
@@ -78,7 +79,7 @@ Metrics HarmonySearch::Run()
 
    auto harmonySortLambda = [&](const Harmony& a, const Harmony& b)
    {
-      return quality(a) < quality(b);
+      return cost(a) > cost(b);
    };
 
    std::sort(m_harmonyMemory.begin(), m_harmonyMemory.end(), harmonySortLambda);
@@ -88,9 +89,9 @@ Metrics HarmonySearch::Run()
    {
       auto newHarmony = getNextHarmony();
 
-      if (quality(newHarmony) > quality(m_harmonyMemory[WORST_HARMONY_INDEX]))
+      if (cost(newHarmony) < cost(m_harmonyMemory[WORST_HARMONY_INDEX]))
       {
-         // Remove worst harmony (one with lowest quality) in memory, sorted to be at element 0
+         // Remove worst harmony (one with highest cost) in memory, sorted to be at element 0
          m_harmonyMemory.erase(m_harmonyMemory.begin());
 
          m_harmonyMemory.push_back(newHarmony);
@@ -98,6 +99,8 @@ Metrics HarmonySearch::Run()
          std::sort(m_harmonyMemory.begin(), m_harmonyMemory.end(), harmonySortLambda);
       }
    }
+
+   //TODO remove nodes that repeat sequentially
 
    // Return Metrics for Best Harmony
    Metrics metrics;
@@ -119,14 +122,12 @@ Harmony HarmonySearch::getRandomHarmony()
 {
    Harmony newHarmony;
 
-   //Function to generate a random harmony
    for (int i = 0; i < NUM_OF_INSTRUMENTS; ++i)
    {
       int randX = static_cast<int>(floor(randomNumber() * m_map.Size().X));
       int randY = static_cast<int>(floor(randomNumber() * m_map.Size().Y));
 
-      Node node;
-      node.position = Point2(randX, randY);
+      Node node = m_map.GetNode(Point2(randX, randY));
       newHarmony.push_back(node);
    }
 
@@ -137,7 +138,9 @@ inline Harmony HarmonySearch::getNextHarmony()
 {
    Harmony nextHarmony;
 
-   for (int i = 0; i < NUM_OF_INSTRUMENTS; ++i)
+   nextHarmony.push_back(m_map.GetNode(m_startPosition));
+
+   for (int i = 1; i < NUM_OF_INSTRUMENTS -1; ++i)
    {
       Node newNote;
 
@@ -161,37 +164,59 @@ inline Harmony HarmonySearch::getNextHarmony()
       else
       {
          int randomIndex = floor(randomNumber() * NUM_OF_INSTRUMENTS);
+
+         // TODO: Replace this with a call to get a new random Node
          newNote = getRandomHarmony()[randomIndex];
       }
 
       nextHarmony.push_back(newNote);
    }
 
+   nextHarmony.push_back(m_map.GetNode(m_endPositions));
+
    return nextHarmony;
 }
 
-int HarmonySearch::quality(const Harmony& harmony)
+int HarmonySearch::cost(const Harmony& harmony)
 {
-   // Function to detemine the quality of a harmony
-   // higher quality == better
-   // if path does not contain the goal node then give it the lowest quality
-   // if path contains an obsticle then give it the lowest quality
-   // if path is not connected (i.e. gaps between nodes) then give it a lower quality (or maybe we should backfill?)
-   // else quality == number of nodes.
+   auto isObsticle = [&](const Node& n) { n.isObsticle == true; };
 
-   // TODO: Compare this version of harmony search to the one implemented in the dissertation.
-   // This is a different way of doing it as I construct a full path as a harmony, rather than finding one node 
-   // at a time like the dissertation version. Maybe I should provide both implementations?
-
-   bool pathContainsObsticles = std::any_of(harmony.begin(), harmony.end(), [&](const Node& n)
-      {
-         n.isObsticle == true;
-      };
-
-   if (pathContainsObsticles)
+   if (std::any_of(harmony.begin(), harmony.end(), isObsticle))
    {
-      return 0; // poorest quality
+      return std::numeric_limits<int>::max(); // poorest cost
    }
 
-   return 0;
+   int cost = 0;
+   for (auto nodeIt = harmony.begin(); nodeIt != harmony.end() - 1; ++nodeIt)
+   {
+      auto currPosition = nodeIt->position;
+      auto nextPosition = (nodeIt + 1)->position;
+
+      int distance = distanceBetween(currPosition, nextPosition);
+
+      if (distance == 1)
+      {
+         cost += 1;
+      }
+      else if (distance == 0)
+      {
+         ++nodeIt;
+      }
+      else if (distance > 1)
+      {
+         cost += distance * distance; //Penalty for a gap, relative to size of the gap.
+      }
+   }
+
+   return cost;
+}
+
+int HarmonySearch::distanceBetween(const Point2& first, const Point2& second)
+{
+   //Euclidean Distance
+
+   int distX = pow(abs(first.X - second.X), 2);
+   int distY = pow(abs(first.Y - second.Y), 2);
+
+   return sqrt(distX + distY);
 }

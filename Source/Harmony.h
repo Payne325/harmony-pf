@@ -46,6 +46,7 @@ namespace Algorithms
 
         Harmony getRandomHarmony();
         inline Harmony getNextHarmony();
-        int quality(const Harmony& harmony);
+        int cost(const Harmony& harmony);
+        int distanceBetween(const Point2& first, const Point2& second);s
     };
 }
